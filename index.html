@@ -11,32 +11,88 @@
     />
     <link rel="stylesheet" href="css/style.css" />
     <script src="https://unpkg.com/feather-icons"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="src/app.js" async></script>
     <title>Hypall Store</title>
   </head>
   <body>
-    <nav class="navbar">
-      <a href="#" class="navbar-logo">hypall <span>sport</span></a>
+    <nav class="navbar" x-data>
+      <a href="index.html" class="navbar-logo">hypall <span>sport</span></a>
 
       <div class="navbar-nav">
         <a href="#home">Home</a>
         <a href="#about">Tentang Kami</a>
         <a href="#produk">Produk</a>
+        <a href="#unggulan">Unggulan</a>
         <a href="#contact">Kontak</a>
+        
       </div>
 
       <div class="navbar-extra">
-        <a href="#" id="cart"><i data-feather="shopping-cart"></i></a>
-        <a href="#" id="menu"><i data-feather="menu"></i></a>
+        <a href="#cart-button" id="cart-button">
+          <i data-feather="shopping-cart"></i></a>
+          <span class="quantity-badge" x-show="$store.cart.quantity" x-text="$store.cart.quantity">10</span>
+        <a href="#menu" id="menu">
+          <i data-feather="menu"></i></a>
+          
       </div>
+
+      <div class="shopping-cart">
+        <template x-for="(item,index) in $store.cart.items" x-keys="index">
+        <div class="cart-item">
+          <img :src="`img/produk/${item.img}`" :alt="item.name">
+          <div class="item-detail">
+            <h3 x-text="item.price"></h3>
+            <div class="item-price">
+              <span x-text="rupiah(item.price)"></span> &times;
+              <button id="remove" @click="$store.cart.remove(item.id)">&minus;</button>
+              <span x-text="item.quantity"></span>
+              <button id="add" @click="$store.cart.add(item)">&plus;</button>&equals;
+              <span x-text="rupiah(item.total)"></span>
+            </div>
+            
+          </div>
+        </div>
+      </template>
+      <h4 x-show="!$store.cart.items.length" style="margin-top: 1rem;">Cart is Empty</h4>
+      <h4 x-show="$store.cart.items.length">Total : <span x-text="rupiah($store.cart.total)"></span></h4>
+      
+        <div class="form-container" x-show="$store.cart.items.length" >
+          <form action="" id="checkoutForm">
+            <input type="hidden" name="items" x-model="JSON.stringify($store.cart.items)">
+            <input type="hidden" name="items" x-model="$store.cart.items">
+            <h5>Customer Detail</h5>
+            <label for="name">
+              <span>Name</span>
+              <input type="text" name="name" id="name" placeholder="Name" required>
+            </label>
+
+            <label for="email">
+              <span>Email</span>
+              <input type="email" name="email" id="email" placeholder="Email" required>
+            </label>
+            
+            <label for="phone">
+              <span>Phone</span>
+              <input type="number" name="phone" id="phone" autocomplete="off" placeholder="Phone" required>
+            </label>
+
+            <button class="checkout-button disabled" type="submit" id="checkout-button" value="checkout">Checkout</button>
+            <input type="hidden" name="whatsapp" value="6285803167332">
+
+          </form>
+        </div>
+    
+    </div>
+      
     </nav>
     <section class="hero" id="home">
       <main class="content">
-        <h1>Jaga <span>Kesehatanmu</span></h1>
+        <h1>HYPALL <span>STORE</span></h1>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum,
-          aspernatur necessitatibus.
+          Toko Sepatu Seconds termurah!
         </p>
-        <a href="#" class="cta">Beli Sekarang</a>
+        <a href="#unggulan" class="cta" >Beli Sekarang</a>
       </main>
     </section>
 
@@ -45,15 +101,14 @@
 
       <div class="row">
         <div class="about-img">
-          <img src="img/store.jpg" alt="" />
+          <img src="img/store-hypall.jpg" alt="" />
         </div>
         <div class="content">
           <h3>Kenapa memilih toko kami?</h3>
           <p>
-            Hypallsportbtg adalah toko online yang berfokus pada jual beli
-            sepatu bekas dengan kualitas terbaik. Kami menyediakan beragam
-            koleksi sepatu dari merek terkemuka dengan harga yang terjangkau.
-          </p>
+            Hypallsportbtg adalah toko online yang berfokus pada jual beli sepatu bekas dengan kualitas terbaik. Kami menyediakan beragam koleksi sepatu dari merek terkemuka dengan harga yang terjangkau.
+          </p><br>
+          <p>Di Hypallsportbtg, kami juga memberikan kesempatan bagi individu untuk menjual sepatu bekas yang masih layak pakai dengan menyediakan platform yang maudah digunakan dan ramah pengguna, kami memudahkan anda untuk membersihkan lemari sepatu dan mendapatkan penghasilan tambahan.</p>
         </div>
       </div>
     </section>
@@ -61,8 +116,7 @@
     <section id="produk" class="produk">
       <h2><span>Produk</span> Kami</h2>
       <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
-        consequatur quod! Tenetur saepe beatae accusantium.
+        Ini adalah produk dari HYPALLSTORE, untuk informasi stok baru akan diinformasikan di sosial media instagram.
       </p>
 
       <div class="row">
@@ -124,11 +178,117 @@
       </div>
     </section>
 
+    <section class="unggulan" id="unggulan" x-data="produk">
+      <h2><span>Produk Unggulan </span> Kami</h2>
+      <p>Nah, ini adalah produk unggulan kami yang sangat dicari oleh para customer... Silahkan di order sebelum kehabisan</p>
+
+      <div class="row">
+        <template x-for="(item, index) in items" x-key="index">
+        <div class="unggulan-card">
+          <div class="unggulan-icons">
+            <a href="#" @click.prevent="$store.cart.add(item)">
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="img/feather-sprite.svg#shopping-cart" />
+              </svg>
+            </i></a>
+            <a href="#">
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="img/feather-sprite.svg#eye" />
+              </svg>
+            </a>
+          </div>
+          <div class="unggulan-image">
+            <img :src="`img/produk/${item.img}`" :alt="item.name">
+          </div>
+          <div class="unggulan-content">
+            <h3 x-text="item.name"></h3>
+            <div class="unggulan-stars">
+              <svg
+                width="24"
+                height="24"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="img/feather-sprite.svg#star" />
+            </svg>
+              <svg
+                width="24"
+                height="24"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="img/feather-sprite.svg#star" />
+            </svg>
+              <svg
+                width="24"
+                height="24"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="img/feather-sprite.svg#star" />
+            </svg>
+              <svg
+                width="24"
+                height="24"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="img/feather-sprite.svg#star" />
+            </svg>
+              <svg
+                width="24"
+                height="24"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <use href="img/feather-sprite.svg#star" />
+            </svg>
+            </div>
+            <div class="unggulan-price">
+              <span x-text="rupiah(item.price)"></span>
+            </div>
+          </div>
+        </div>
+      </template>
+        
+      </div>
+    </section>
+
     <section id="contact" class="contact">
       <h2><span>Kontak</span> Kami</h2>
       <p>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque,
-        perferendis. Fuga amet sapiente repellendus accusantium?
+        Kalau mau cek kondisi sepatu secara langsung bisa di klik maps dibawah yaa..
       </p>
 
       <div class="row">
@@ -160,8 +320,8 @@
 
     <footer>
       <div class="social">
-        <a href="#"><i data-feather="instagram"></i></a>
-        <a href="#"><i data-feather="facebook"></i></a>
+        <a href="https://www.instagram.com/hypallsportbtg/" target="_blank"><i data-feather="instagram"></i></a>
+        <a href="https://api.whatsapp.com/send?phone=6285803167332" target="_blank"><i data-feather="phone-call"></i></a>
       </div>
 
       <div class="links">
