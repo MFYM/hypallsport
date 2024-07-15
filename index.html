@@ -299,22 +299,26 @@
           referrerpolicy="no-referrer-when-downgrade"
           class="map"
         ></iframe>
-
-        <form action="">
+        <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+        <form id="contact-form">
           <div class="input-group">
-            <i data-feather="user"></i>
-            <input type="text" placeholder="nama" />
+              <i data-feather="user"></i>
+              <input type="text" placeholder="nama" id="name" required />
           </div>
           <div class="input-group">
-            <i data-feather="mail"></i>
-            <input type="email" placeholder="email" />
+              <i data-feather="mail"></i>
+              <input type="email" placeholder="email" id="email" required />
           </div>
           <div class="input-group">
-            <i data-feather="phone"></i>
-            <input type="number" placeholder="no hp" />
+              <i data-feather="phone"></i>
+              <input type="number" placeholder="no hp" id="phone" required />
           </div>
-          <button type="submit" class="btn">Kirim</button>
-        </form>
+          <div class="input-group">
+              <i data-feather="text"></i>
+              <input type="text" placeholder="Komentar" id="komentar" required />
+          </div>
+          <button type="button" class="btn" onclick="sendEmail()">Kirim</button>
+      </form>
       </div>
     </section>
 
